@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.Assertions;
@@ -654,24 +654,39 @@ namespace AssetBundleBrowser.AssetBundleModel
             return null;
         }
 
+        // Unity 6 NullRef Fix: Original code was causing crash when parent is null.
+        // info.AddParent(parent.displayName);
+        // if (info != null && parent != null) { info.AddParent(parent.displayName); }
         private static AssetInfo CreateAsset(string name, string bundleName, AssetInfo parent)
         {
-            if(!System.String.IsNullOrEmpty(bundleName))
+            // 追加: name自体が不正な場合のガード
+            if (string.IsNullOrEmpty(name)) return null;
+
+            if (!System.String.IsNullOrEmpty(bundleName))
             {
                 return new AssetInfo(name, bundleName);
             }
             else
             {
                 AssetInfo info = null;
-                if(!s_GlobalAssetList.TryGetValue(name, out info))
+
+                // s_GlobalAssetList自体がnullでないか確認
+                if (s_GlobalAssetList == null) return null;
+
+                if (!s_GlobalAssetList.TryGetValue(name, out info))
                 {
                     info = new AssetInfo(name, string.Empty);
                     s_GlobalAssetList.Add(name, info);
                 }
-                info.AddParent(parent.displayName);
+
+                // --- 修正箇所：parent の null チェックを追加 ---
+                if (info != null && parent != null)
+                {
+                    info.AddParent(parent.displayName);
+                }
+
                 return info;
             }
-
         }
 
         internal static bool ValidateAsset(string name)
