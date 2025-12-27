@@ -8,9 +8,7 @@ The "Configure" tab offers basic functionality for assigning Assets and Scenes t
 
 The "Build" tab offers basic functionality to assist in setting up a call to [BuildPipeline.BuildAssetBundles()](https://docs.unity3d.com/ScriptReference/BuildPipeline.BuildAssetBundles.html).
 
-## Alternatives
-
-It is recommended to use the [Addressables package](https://docs.unity3d.com/Packages/com.unity.addressables@latest) to define and build AssetBundles, rather than the Asset Bundle Browser.
+**Patched for Unity 6 (NullReferenceException fix)**
 
 [UnityDataTools](https://github.com/Unity-Technologies/UnityDataTools) is an alternative way to view the content of built AssetBundles.
 
